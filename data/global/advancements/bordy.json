@@ -1,0 +1,17 @@
+{
+    "display": {
+        "title": "WorldBorder",
+        "description": "Makes the worldborder player count dependant.",
+        "icon": {
+            "id": "minecraft:player_head"
+        },
+        "show_toast": false,
+        "announce_to_chat": false
+    },
+    "parent": "global:root",
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:tick"
+        }
+    }
+}
