@@ -7,6 +7,7 @@
 
 scoreboard players set playerCount playerCount 0
 
+# execute as @e[type=armor_stand] run scoreboard players add playerCount playerCount 1
 execute as @a run scoreboard players add playerCount playerCount 1
 scoreboard players operation calculatedBorder worldBorderSize = playerCount playerCount
 scoreboard players operation calculatedBorder worldBorderSize *= multiplier worldBorderSize
