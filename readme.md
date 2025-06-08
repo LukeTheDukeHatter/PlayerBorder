@@ -5,7 +5,13 @@ The world border will be set to:
 ```
 min(MaxSize, max(MinSize, PlayerCount * Multiplier))
 ```
-at all times, and a chat message will be sent every time the size is updated.
+AKA
+```
+diameter = PlayerCount * Multiplier
+if diameter < Min_Size: diameter = Min_Size
+if diameter > Max_Size: diameter = Max_Size
+```
+At all times, and a chat message will be sent every time the size is updated.
 
 The values and defaults are all diameters of the border, e.g: A Multiplier of 40 means that for each player, you will gain another 20 block in each direction from the center.
 There are 3 settings:
