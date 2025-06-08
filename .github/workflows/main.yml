@@ -1,0 +1,54 @@
+name: Build and Release Specific Folder
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version (e.g., v1.0.0)'
+        required: true
+        type: string
+      release_name:
+        description: 'Name for the release (e.g., My Awesome Pack v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Zip Archive
+        run: |
+          # Navigate to the root of the repository
+          cd ${{ github.workspace }}
+
+          # Create the zip file, including 'data' directory and 'pack.mcmeta' file
+          # The -j flag is NOT used here as we want to preserve directory structure for 'data'
+          # We specify each item to be included at the root of the zip
+          zip -r ${{ github.event.repository.name }}-${{ inputs.version }}.zip data pack.mcmeta \
+            -x "*.git*" "*.github*" "node_modules/*" ".DS_Store" "*.yml" "*.md"
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ inputs.version }}
+          release_name: ${{ inputs.release_name }}
+          body: |
+            Automated release of the data pack/resource pack for version ${{ inputs.version }}.
+            Includes the 'data' folder and 'pack.mcmeta' file at the root of the zip.
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.event.repository.name }}-${{ inputs.version }}.zip
+          asset_name: ${{ github.event.repository.name }}-${{ inputs.version }}.zip
+          asset_content_type: application/zip
